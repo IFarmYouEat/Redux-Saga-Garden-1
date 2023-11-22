@@ -21,13 +21,32 @@ function PlantList() {
     return (
         <div>
             <h3>This is the plant list</h3>
-            <ul>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Kingdom</td>
+                        <td>Clade</td>
+                        <td>Order</td>
+                        <td>Family</td>
+                        <td>Subfamily</td>
+                        <td>Genus</td>
+                    </tr>
+                </thead>
+                <tbody>
                 {reduxState.map((plant, index) => 
-                    <li key={index}>
-                        {plant.name}
-                    </li>
+                    <tr key={index}>
+                        <td>{plant.name}</td>
+                        <td>{plant.kingdom}</td>
+                        <td>{plant.clade}</td>
+                        <td>{plant.order}</td>
+                        <td>{plant.family}</td>
+                        <td>{plant.subfamily}</td>
+                        <td>{plant.genus}</td> 
+                    </tr>
                 )}
-            </ul>
+                </tbody>
+            </table>
         </div>
     );
 }
