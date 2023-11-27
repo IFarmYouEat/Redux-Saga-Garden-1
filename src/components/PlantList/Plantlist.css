@@ -1,0 +1,8 @@
+#plantlist-table{
+    display: flex;
+    justify-content: space-around;
+}
+
+td{
+    padding: 8px;
+}

@@ -6,12 +6,15 @@ import App from './App';
 import logger from 'redux-logger';
 
 import createSagaMiddleware from 'redux-saga';
-import { takeEvery, put} from 'redux-saga/effects'
+import { put, takeLatest} from 'redux-saga/effects'
 import axios from 'axios';
 
 
 const plantList = (state = [], action) => {
   switch (action.type) {
+    case 'ADD_PLANT':
+      console.log(action.payload)
+      return[...state, action.payload];
     case 'SET_PLANTS':
       console.log(action.payload)
       return action.payload;
@@ -19,6 +22,17 @@ const plantList = (state = [], action) => {
       return state;
   }
 };
+
+function* sendPlantToServer(action) {
+  try {
+    yield axios.post('/api/plant', action.payload);
+    yield put({ type: 'FETCH_PLANTS'})
+  } catch (error) {
+    console.log('Error in addPlant', error);
+    alert('could not add plant.')
+    throw error;
+  }
+}
 
 function* fetchPlants(){
   try{
@@ -32,10 +46,21 @@ function* fetchPlants(){
   }
 }
 
-function* rootSaga(){
-  yield takeEvery('FETCH_PLANTS', fetchPlants);
-  
+function* removePlant(action){
+  try{
+    yield axios.delete(`/api/plant/${action.payload}`);
+    yield put({ type: 'FETCH_PLANTS'});
+  } catch (error) {
+  alert('Could not remove plant');
+  console.log('Remove plant failed', error);
+  throw error;
+  }
+}
 
+function* rootSaga(){
+  yield takeLatest('FETCH_PLANTS', fetchPlants);
+  yield takeLatest('SEND_PLANT_TO_SERVER', sendPlantToServer);
+  yield takeLatest('REMOVE_PLANT', removePlant)
 }
 
 const sagaMiddleware = createSagaMiddleware();
